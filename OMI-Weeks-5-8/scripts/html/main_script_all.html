@@ -1,0 +1,832 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>main_script_all</title><meta name="generator" content="MATLAB 9.2"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-10-04"><meta name="DC.source" content="main_script_all.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Introduction</a></li><li><a href="#2">User Select Parameters</a></li><li><a href="#3">Select outputs</a></li><li><a href="#4">Import data</a></li><li><a href="#5">Functions</a></li></ul></div><h2 id="1">Introduction</h2><pre class="codeinput"><span class="comment">% This main script is to compare all the methods of calculating dependency.</span>
+<span class="comment">% It is possible for the user to selected which features are compared and</span>
+<span class="comment">% a variety of graphs that compare the different methods.</span>
+</pre><h2 id="2">User Select Parameters</h2><pre class="codeinput"><span class="comment">% Set the overall time window for data that is to be analysied</span>
+<span class="comment">% Set date in format 'dd-MMM-yyyy hh:mm:ss'   e.g. '03-Oct-2016 07:33:57'</span>
+<span class="comment">% Time must be between 07:30:00' and 16:30:00'</span>
+<span class="comment">% Date must be between 03-Oct-2016 and 28-Oct-2016</span>
+Set_Date_1 = <span class="string">'03-Oct-2016 12:35:00'</span>;
+Set_Date_2 = <span class="string">'03-Oct-2016 16:25:00'</span>;
+
+<span class="comment">% Set the number of intervals, that is the number of seperate time</span>
+<span class="comment">% intervals to analysis the data seperately.</span>
+<span class="comment">% Set as 1 if comparing the whole period</span>
+num_intervals = 3;
+
+<span class="comment">% Choose which features that will be computed and hence dependencies</span>
+<span class="comment">% calculated</span>
+<span class="comment">% The number in each catergory corresponds to the level</span>
+<span class="comment">% Values must be between 1 and 10 or empty</span>
+select_ask_prices = [1:2];
+select_bid_prices = [1:2];
+select_ask_sizes = [];
+select_bid_sizes = [];
+
+<span class="comment">% Function that re-orders the choosen features to make the code easier</span>
+[selected_features] = select_features(select_ask_prices,select_bid_prices,<span class="keyword">...</span>
+select_ask_sizes,select_bid_sizes);
+
+<span class="comment">% Set sampling frequency or time interval for the resample function</span>
+<span class="comment">% Time interval is in seconds</span>
+time_interval = 1;
+fs = 1/time_interval;
+<span class="comment">% Type = 0 ('event') takes the most recent event in the data</span>
+<span class="comment">% Type = 1 ('inter') linear interpolates the data</span>
+type = 0;
+
+<span class="comment">% For the varying time frequency function, select the range and the number</span>
+<span class="comment">% of frequencies to be evalulated</span>
+fs_range = [0.01,0.03];
+num_freq = 3;
+
+<span class="comment">% Define frequency fraction and order for the butterworth filter that is</span>
+<span class="comment">% applied on the resampled data</span>
+freq_fraction = 0.25;
+filter_order = 2;
+
+<span class="comment">% A list is produced containing the most significant dependecies. Select</span>
+<span class="comment">% the proportional number of terms to be included in this list (or the</span>
+<span class="comment">% maximum number</span>
+prop = 0.5;
+num_max = round(prop*(max(size(selected_features)))^2);
+
+<span class="comment">% Parameter to determine the circle size on the plots, (the size of the</span>
+<span class="comment">% circles corresponds to bid/ask size)</span>
+circle_size = 0.55;
+</pre><h2 id="3">Select outputs</h2><p>A "1" indicates that the graph/method is to be plotted/included and a "0" indicates that it is not</p><pre class="codeinput"><span class="comment">% A scatter plot showing the price of the selected levels against time,</span>
+<span class="comment">% with the size of each line representing the size of each level. All</span>
+<span class="comment">% features are super-imposed on the same plot</span>
+scatter_plot = 0;
+
+<span class="comment">% A scatter plot showing the price of the selected levels against time,</span>
+<span class="comment">% with the size of each line representing the size of each level. All</span>
+<span class="comment">% features are ploted on seperate subplots</span>
+scatter_plot_sub = 0;
+
+<span class="comment">% A scatter plot showing the price of the selected levels against time,</span>
+<span class="comment">% with the size of each line representing the size of each level. Each</span>
+<span class="comment">% subplot compares the effect sampling and filtering to raw data</span>
+compare_sampling = 0;
+
+<span class="comment">% A plots of the log determinant of each of the dependency matricies</span>
+<span class="comment">% (merits) as a function of time</span>
+merits_time = 0;
+
+<span class="comment">% A plots of the log determinant of each of the dependency matricies</span>
+<span class="comment">% (merits) where the x-axis represents time as an expanding window.</span>
+<span class="comment">% Effectively a cumulative merit</span>
+merits_scale = 0;
+
+<span class="comment">% A plots of the log determinant of each of the dependency matricies</span>
+<span class="comment">% (merits) as a function of sampling frequency (only for resample and</span>
+<span class="comment">% resample and filter corrleations)</span>
+merits_resampling = 0;
+
+<span class="comment">% A figure with a visualisation of each of the dependency matricies. The</span>
+<span class="comment">% time updates every 3 seconds, so to close the figure, call "ctrl-C" in</span>
+<span class="comment">% the command window</span>
+visualise_matrix = 1;
+
+    <span class="comment">% Select whether to evaulate varying: time, time window or resample</span>
+    <span class="comment">% Can only have one figure running at a time, so it is recommeneded</span>
+    <span class="comment">% that only one variable below is set to a "1".</span>
+    visualise_time = 0;
+    visualise_scale = 0;
+    visualise_resampling = 1;
+
+<span class="comment">% A summary of all the results with each dependency method in a seperate</span>
+<span class="comment">% figure</span>
+summarise_data = 0;
+
+    <span class="comment">% Select which methods to evaluate</span>
+    summarise_standard = 1;
+    summarise_standard_resample = 1;
+    summarise_standard_filter = 1;
+    summarise_brownian = 1;
+    summarise_fourier = 1;
+    summarise_copula = 1;
+    summarise_copula_resample = 1;
+    summarise_copula_filter = 1;
+
+    <span class="comment">% Select whether to evaulate varying: time, time window or resample</span>
+    summarise_time = 1;
+    summarise_scale = 0;
+    summarise_resampling = 0;
+</pre><h2 id="4">Import data</h2><pre class="codeinput"><span class="comment">% Saves time when data is already imported</span>
+<span class="keyword">if</span> exist(<span class="string">'XOMMarketDepthOct2016_Values'</span>,<span class="string">'var'</span>) == 0
+
+disp(<span class="string">'Importing data fromm csv file...'</span>);
+
+<span class="comment">% Imports data from csv file</span>
+[XOMMarketDepthOct2016_Values,XOMMarketDepthOct2016_DateTime,<span class="keyword">...</span>
+XOMTransactionsOct2016,XOMTransactionsOct2016_DateTime] = import_data();
+
+<span class="comment">% Convert date and time to standard format</span>
+DateTime_Con = datetime(XOMMarketDepthOct2016_DateTime, <span class="string">'InputFormat'</span>,<span class="keyword">...</span>
+<span class="string">'yyyy-MM-dd''T''HH:mm:ss.SSS''Z'</span>, <span class="string">'TimeZone'</span>, <span class="string">'UTC'</span>);
+
+disp(<span class="string">'Data imported'</span>);
+
+<span class="keyword">else</span>
+
+disp(<span class="string">'Data already imported'</span>);
+
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">Importing data fromm csv file...
+Data imported
+</pre><h2 id="5">Functions</h2><pre class="codeinput"><span class="comment">% Calculates all dependecies along with a list of their most significant</span>
+<span class="comment">% values, uses seperate intervals to compute dependencies. Also creates a</span>
+<span class="comment">% list of intervals to be used in the plots</span>
+<span class="keyword">if</span> merits_time == 1 || (visualise_matrix == 1 &amp;&amp; visualise_time == 1)<span class="keyword">...</span>
+   ||(summarise_data == 1 &amp;&amp; summarise_time == 1)
+
+disp(<span class="string">'Calculating all dependencies for varying time...'</span>);
+
+[R_St,R_Sresamplet,R_Sfiltert,R_Bt,R_Ft,R_Ct,R_Cresamplet,R_Cfiltert,<span class="keyword">...</span>
+largest_R_St,largest_R_Sresamplet,largest_R_Sfiltert,largest_R_Bt,<span class="keyword">...</span>
+largest_R_Ft,largest_R_Ct,largest_R_Cresamplet,largest_R_Cfiltert] <span class="keyword">...</span>
+= calculate_all_dependencies_vary_time<span class="keyword">...</span>
+(selected_features,num_intervals,num_max,Set_Date_1,Set_Date_2,<span class="keyword">...</span>
+XOMMarketDepthOct2016_Values,DateTime_Con,<span class="keyword">...</span>
+fs,type,freq_fraction,filter_order);
+
+disp(<span class="string">'All dependencies for varying time calculated'</span>);
+
+<span class="keyword">end</span>
+
+<span class="comment">% Calculates all dependecies along with a list of their most significant</span>
+<span class="comment">% values, uses seperate intervals to compute dependencies</span>
+<span class="keyword">if</span> merits_scale == 1 || (visualise_matrix == 1 &amp;&amp; visualise_scale == 1)<span class="keyword">...</span>
+   || (summarise_data == 1 &amp;&amp; summarise_scale == 1)
+
+disp(<span class="string">'Calculating all dependencies for a varying time window...'</span>);
+
+[R_SWt,R_SresampleWt,R_SfilterWt,R_BWt,R_FWt,R_CWt,R_CresampleWt,<span class="keyword">...</span>
+R_CfilterWt,largest_R_SWt,largest_R_SresampleWt,largest_R_SfilterWt,<span class="keyword">...</span>
+largest_R_BWt,largest_R_FWt,largest_R_CWt,largest_R_CresampleWt,<span class="keyword">...</span>
+largest_R_CfilterWt] = <span class="keyword">...</span>
+calculate_all_dependencies_vary_window<span class="keyword">...</span>
+(selected_features,num_intervals,<span class="keyword">...</span>
+num_max,Set_Date_1,Set_Date_2,XOMMarketDepthOct2016_Values,DateTime_Con,<span class="keyword">...</span>
+fs,type,freq_fraction,filter_order);
+
+disp(<span class="string">'All dependencies for a varying time window calculated'</span>);
+
+<span class="keyword">end</span>
+
+<span class="comment">% Calculates all dependecies along with a list of their most significant</span>
+<span class="comment">% values, uses different resample rates to compute dependencies</span>
+<span class="keyword">if</span> merits_resampling == 1 ||<span class="keyword">...</span>
+   (visualise_matrix == 1 &amp;&amp; visualise_resampling == 1) ||<span class="keyword">...</span>
+   (summarise_data == 1 &amp;&amp; summarise_resampling == 1)
+
+disp(<span class="string">'Calculating all dependencies for a varying sampling frequency...'</span>);
+
+[R_SresampleSt,R_SfilterSt,R_CresampleSt,R_CfilterSt,largest_R_SresampleSt,<span class="keyword">...</span>
+largest_R_SfilterSt,largest_R_CresampleSt,largest_R_CfilterSt] = <span class="keyword">...</span>
+calculate_all_dependencies_vary_resampling<span class="keyword">...</span>
+(selected_features,num_max,Set_Date_1,Set_Date_2,<span class="keyword">...</span>
+XOMMarketDepthOct2016_Values,DateTime_Con,type,<span class="keyword">...</span>
+freq_fraction,filter_order,fs_range,num_freq);
+
+disp(<span class="string">'All dependencies for a varying sampling frequency calculated'</span>);
+
+<span class="keyword">end</span>
+
+<span class="comment">% Contains a list of names of each feature</span>
+[feature_name_list] = feature_name_list();
+
+<span class="comment">% Relates the row number to the feature number and name</span>
+clear <span class="string">relate_feature_list</span>;  <span class="comment">% Without this there will be an error</span>
+[relate_feature_list] = relate_feature_list<span class="keyword">...</span>
+(selected_features,feature_name_list);
+
+<span class="comment">% Lists the date and time of the intervals</span>
+[interval_list] = find_intervals<span class="keyword">...</span>
+(Set_Date_1,Set_Date_2,DateTime_Con,num_intervals);
+
+disp(<span class="string">'Creating required plots and compiling results...'</span>);
+
+<span class="comment">% A scatter plot showing the price of the selected levels against time,</span>
+<span class="comment">% with the size of each line representing the size of each level. All</span>
+<span class="comment">% features are super-imposed on the same plot. Dotted line represents the</span>
+<span class="comment">% interval spacing</span>
+<span class="keyword">if</span> scatter_plot == 1
+
+plot_levels_scatter<span class="keyword">...</span>
+(Set_Date_1,Set_Date_2,XOMMarketDepthOct2016_Values,DateTime_Con,<span class="keyword">...</span>
+circle_size,selected_features,feature_name_list,interval_list);
+
+<span class="keyword">end</span>
+
+<span class="comment">% A scatter plot showing the price of the selected levels against time,</span>
+<span class="comment">% with the size of each line representing the size of each level. All</span>
+<span class="comment">% features are ploted on seperate subplots. Dotted line represents the</span>
+<span class="comment">% interval spacing</span>
+<span class="keyword">if</span> scatter_plot_sub == 1
+
+plot_levels_scatter_sub<span class="keyword">...</span>
+(Set_Date_1,Set_Date_2,XOMMarketDepthOct2016_Values,DateTime_Con,<span class="keyword">...</span>
+circle_size,selected_features,feature_name_list,interval_list);
+
+<span class="keyword">end</span>
+
+<span class="comment">% A scatter plot showing the price of the selected levels against time,</span>
+<span class="comment">% with the size of each line representing the size of each level. Each</span>
+<span class="comment">% subplot compares the effect sampling and filtering to raw data</span>
+<span class="keyword">if</span> compare_sampling == 1
+
+plot_compare_sampling<span class="keyword">...</span>
+(Set_Date_1,Set_Date_2,XOMMarketDepthOct2016_Values,DateTime_Con,<span class="keyword">...</span>
+circle_size,selected_features,feature_name_list,interval_list,fs,<span class="keyword">...</span>
+type,filter_order,freq_fraction);
+
+<span class="keyword">end</span>
+
+<span class="comment">% A plot of the log determinant of each of the dependency matricies</span>
+<span class="comment">% (merits) as a function of time</span>
+<span class="keyword">if</span> merits_time == 1 || (summarise_time == 1 &amp;&amp; summarise_data == 1)
+
+[merit_R_St,merit_R_Sresamplet,merit_R_Sfiltert,merit_R_Bt,merit_R_Ft,<span class="keyword">...</span>
+merit_R_Ct,merit_R_Cresamplet,merit_R_Cfiltert]<span class="keyword">...</span>
+= plot_merits_time<span class="keyword">...</span>
+(num_intervals,R_St,R_Sresamplet,R_Sfiltert,R_Bt,R_Ft,R_Ct,R_Cresamplet,<span class="keyword">...</span>
+R_Cfiltert,interval_list,merits_time);
+
+<span class="keyword">end</span>
+
+<span class="comment">% A plot of the log determinant of each of the dependency matricies</span>
+<span class="comment">% (merits) where the x-axis represents time as an expanding window.</span>
+<span class="comment">% Effectively a cumulative merit</span>
+<span class="keyword">if</span> merits_scale == 1 || (summarise_scale == 1 &amp;&amp; summarise_data == 1)
+
+[merit_R_SWt,merit_R_SresampleWt,merit_R_SfilterWt,merit_R_BWt,<span class="keyword">...</span>
+merit_R_FWt,merit_R_CWt,merit_R_CresampleWt,merit_R_CfilterWt]<span class="keyword">...</span>
+= plot_merits_scale<span class="keyword">...</span>
+(num_intervals,R_SWt,R_SresampleWt,R_SfilterWt,R_BWt,<span class="keyword">...</span>
+R_FWt,R_CWt,R_CresampleWt,R_CfilterWt,interval_list,merits_time);
+
+<span class="keyword">end</span>
+
+<span class="comment">% A plot of the log determinant of each of the dependency matricies</span>
+<span class="comment">% (merits) as a function of sampling frequency (only for resample and</span>
+<span class="comment">% resample and filter corrleations)</span>
+<span class="keyword">if</span> merits_resampling == 1 ||<span class="keyword">...</span>
+   (summarise_resampling == 1 &amp;&amp; summarise_data == 1)
+
+[merit_R_SresampleSt,merit_R_SfilterSt,merit_R_CresampleSt,<span class="keyword">...</span>
+merit_R_CfilterSt] <span class="keyword">...</span>
+= plot_merits_resampling<span class="keyword">...</span>
+(fs_range,num_freq,R_SresampleSt,R_SfilterSt,R_CresampleSt,R_CfilterSt,<span class="keyword">...</span>
+merits_resampling);
+
+<span class="keyword">end</span>
+
+<span class="comment">% A summary of all the results with each dependency method in a seperate</span>
+<span class="comment">% figure.  Each function is for varying: time, time window or resample</span>
+<span class="keyword">if</span> summarise_time == 1 &amp;&amp; summarise_data == 1
+
+[str2] = summarise_results_time<span class="keyword">...</span>
+(largest_R_Bt,largest_R_Ct,largest_R_Sfiltert,largest_R_Ft,<span class="keyword">...</span>
+largest_R_Sresamplet,largest_R_St,largest_R_Cresamplet,largest_R_Cfiltert,<span class="keyword">...</span>
+merit_R_Bt,merit_R_Ct,merit_R_Sfiltert,merit_R_Ft,merit_R_Sresamplet,<span class="keyword">...</span>
+merit_R_St,merit_R_Cresamplet,merit_R_Cfiltert,<span class="keyword">...</span>
+R_Bt,R_Ct,R_Sfiltert,R_Ft,R_Sresamplet,R_St,R_Cresamplet,R_Cfiltert,<span class="keyword">...</span>
+summarise_data,summarise_standard,summarise_standard_resample,<span class="keyword">...</span>
+summarise_standard_filter,summarise_brownian,summarise_fourier,<span class="keyword">...</span>
+summarise_copula,summarise_copula_resample,summarise_copula_filter,<span class="keyword">...</span>
+relate_feature_list,interval_list);
+
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> summarise_scale == 1 &amp;&amp; summarise_data == 1
+
+[str2] = summarise_results_scale<span class="keyword">...</span>
+(largest_R_BWt,largest_R_CWt,largest_R_SfilterWt,largest_R_FWt,<span class="keyword">...</span>
+largest_R_SresampleWt,largest_R_SWt,largest_R_CresampleWt,<span class="keyword">...</span>
+largest_R_CfilterWt,<span class="keyword">...</span>
+merit_R_BWt,merit_R_CWt,merit_R_SfilterWt,merit_R_FWt,<span class="keyword">...</span>
+merit_R_SresampleWt,merit_R_SWt,merit_R_CresampleWt,merit_R_CfilterWt,<span class="keyword">...</span>
+R_BWt,R_CWt,R_SfilterWt,R_FWt,R_SresampleWt,R_SWt,R_CresampleWt,<span class="keyword">...</span>
+R_CfilterWt,<span class="keyword">...</span>
+summarise_data,summarise_standard,summarise_standard_resample,<span class="keyword">...</span>
+summarise_standard_filter,summarise_brownian,summarise_fourier,<span class="keyword">...</span>
+summarise_copula,summarise_copula_resample,summarise_copula_filter,<span class="keyword">...</span>
+relate_feature_list,interval_list);
+
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> summarise_resampling == 1 &amp;&amp; summarise_data == 1
+
+[str2] = summarise_results_resampling<span class="keyword">...</span>
+(largest_R_SfilterSt,largest_R_SresampleSt,largest_R_CresampleSt,<span class="keyword">...</span>
+largest_R_CfilterSt,<span class="keyword">...</span>
+merit_R_SfilterSt,merit_R_SresampleSt,merit_R_CresampleSt,merit_R_CfilterSt,<span class="keyword">...</span>
+R_SfilterSt,R_SresampleSt,R_CresampleSt,R_CfilterSt,<span class="keyword">...</span>
+summarise_data,summarise_standard_resample,summarise_standard_filter,<span class="keyword">...</span>
+summarise_copula_resample,summarise_copula_filter,<span class="keyword">...</span>
+relate_feature_list,fs_range,num_freq);
+
+<span class="keyword">end</span>
+
+<span class="comment">% A figure with a visualisation of each of the dependency matricies. The</span>
+<span class="comment">% time updates every 3 seconds, so to close the figure, call "ctrl-C" in</span>
+<span class="comment">% the command window. Each function is for varying: time, time window or</span>
+<span class="comment">% resample</span>
+<span class="keyword">if</span> visualise_matrix == 1 &amp;&amp; visualise_time == 1
+
+[str] = visualise_matrices_time<span class="keyword">...</span>
+(R_St,R_Sresamplet,R_Sfiltert,R_Bt,R_Ft,R_Ct,R_Cresamplet,R_Cfiltert,<span class="keyword">...</span>
+num_intervals,selected_features,feature_name_list,relate_feature_list);
+
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> visualise_matrix == 1 &amp;&amp; visualise_scale == 1
+
+[str] = visualise_matrices_scale<span class="keyword">...</span>
+(R_SWt,R_SresampleWt,R_SfilterWt,R_BWt,R_FWt,R_CWt,R_CresampleWt,<span class="keyword">...</span>
+R_CfilterWt,num_intervals,selected_features,feature_name_list,<span class="keyword">...</span>
+relate_feature_list);
+
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> visualise_matrix == 1 &amp;&amp; visualise_resampling == 1
+
+[str] = visualise_matrices_resampling<span class="keyword">...</span>
+(R_SresampleSt,R_SfilterSt,R_CresampleSt,R_CfilterSt,selected_features,<span class="keyword">...</span>
+feature_name_list,relate_feature_list);
+
+<span class="keyword">end</span>
+
+disp(<span class="string">'End of script'</span>);
+
+<span class="comment">% Matthew Newton</span>
+<span class="comment">% August - October 2017</span>
+</pre><pre class="codeoutput">Calculating all dependencies for a varying sampling frequency...
+Finding dependencies for frequency 0.01
+Dependencies for frequency 1 found
+Finding dependencies for frequency 0.02
+Dependencies for frequency 2 found
+Finding dependencies for frequency 0.03
+Dependencies for frequency 3 found
+All dependencies for a varying sampling frequency calculated
+Creating required plots and compiling results...
+</pre><pre class="codeoutput error">Error using figure
+First argument must be a figure object or a positive Integer
+
+Error in visualise_matrices_resampling (line 49)
+        figure(f9)
+
+Error in main_script_all (line 369)
+[str] = visualise_matrices_resampling...
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2017a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Introduction
+
+% This main script is to compare all the methods of calculating dependency.
+% It is possible for the user to selected which features are compared and 
+% a variety of graphs that compare the different methods.
+
+%% User Select Parameters
+
+% Set the overall time window for data that is to be analysied
+% Set date in format 'dd-MMM-yyyy hh:mm:ss'   e.g. '03-Oct-2016 07:33:57'
+% Time must be between 07:30:00' and 16:30:00'
+% Date must be between 03-Oct-2016 and 28-Oct-2016
+Set_Date_1 = '03-Oct-2016 12:35:00';
+Set_Date_2 = '03-Oct-2016 16:25:00';
+
+% Set the number of intervals, that is the number of seperate time 
+% intervals to analysis the data seperately.
+% Set as 1 if comparing the whole period
+num_intervals = 3;
+
+% Choose which features that will be computed and hence dependencies
+% calculated
+% The number in each catergory corresponds to the level
+% Values must be between 1 and 10 or empty
+select_ask_prices = [1:2];
+select_bid_prices = [1:2];
+select_ask_sizes = [];
+select_bid_sizes = [];
+
+% Function that re-orders the choosen features to make the code easier
+[selected_features] = select_features(select_ask_prices,select_bid_prices,...
+select_ask_sizes,select_bid_sizes);
+
+% Set sampling frequency or time interval for the resample function
+% Time interval is in seconds
+time_interval = 1;
+fs = 1/time_interval;
+% Type = 0 ('event') takes the most recent event in the data
+% Type = 1 ('inter') linear interpolates the data
+type = 0;
+
+% For the varying time frequency function, select the range and the number
+% of frequencies to be evalulated
+fs_range = [0.01,0.03];
+num_freq = 3;
+
+% Define frequency fraction and order for the butterworth filter that is        
+% applied on the resampled data
+freq_fraction = 0.25;
+filter_order = 2;
+
+% A list is produced containing the most significant dependecies. Select 
+% the proportional number of terms to be included in this list (or the
+% maximum number
+prop = 0.5;
+num_max = round(prop*(max(size(selected_features)))^2);
+
+% Parameter to determine the circle size on the plots, (the size of the
+% circles corresponds to bid/ask size)
+circle_size = 0.55;
+
+%% Select outputs
+% A "1" indicates that the graph/method is to be plotted/included and a 
+% "0" indicates that it is not
+
+% A scatter plot showing the price of the selected levels against time, 
+% with the size of each line representing the size of each level. All 
+% features are super-imposed on the same plot
+scatter_plot = 0;
+
+% A scatter plot showing the price of the selected levels against time, 
+% with the size of each line representing the size of each level. All
+% features are ploted on seperate subplots
+scatter_plot_sub = 0;
+
+% A scatter plot showing the price of the selected levels against time, 
+% with the size of each line representing the size of each level. Each 
+% subplot compares the effect sampling and filtering to raw data
+compare_sampling = 0;
+
+% A plots of the log determinant of each of the dependency matricies 
+% (merits) as a function of time
+merits_time = 0;
+
+% A plots of the log determinant of each of the dependency matricies 
+% (merits) where the x-axis represents time as an expanding window.
+% Effectively a cumulative merit
+merits_scale = 0;
+
+% A plots of the log determinant of each of the dependency matricies 
+% (merits) as a function of sampling frequency (only for resample and 
+% resample and filter corrleations)
+merits_resampling = 0;
+
+% A figure with a visualisation of each of the dependency matricies. The
+% time updates every 3 seconds, so to close the figure, call "ctrl-C" in
+% the command window
+visualise_matrix = 1;
+
+    % Select whether to evaulate varying: time, time window or resample
+    % Can only have one figure running at a time, so it is recommeneded
+    % that only one variable below is set to a "1".
+    visualise_time = 0;
+    visualise_scale = 0;
+    visualise_resampling = 1;
+
+% A summary of all the results with each dependency method in a seperate
+% figure
+summarise_data = 0;
+
+    % Select which methods to evaluate
+    summarise_standard = 1;
+    summarise_standard_resample = 1;
+    summarise_standard_filter = 1;
+    summarise_brownian = 1;
+    summarise_fourier = 1;
+    summarise_copula = 1;
+    summarise_copula_resample = 1;
+    summarise_copula_filter = 1;
+    
+    % Select whether to evaulate varying: time, time window or resample
+    summarise_time = 1;
+    summarise_scale = 0;
+    summarise_resampling = 0;
+  
+%% Import data
+
+% Saves time when data is already imported
+if exist('XOMMarketDepthOct2016_Values','var') == 0
+       
+disp('Importing data fromm csv file...');
+    
+% Imports data from csv file
+[XOMMarketDepthOct2016_Values,XOMMarketDepthOct2016_DateTime,...
+XOMTransactionsOct2016,XOMTransactionsOct2016_DateTime] = import_data();
+
+% Convert date and time to standard format
+DateTime_Con = datetime(XOMMarketDepthOct2016_DateTime, 'InputFormat',...
+'yyyy-MM-dd''T''HH:mm:ss.SSS''Z', 'TimeZone', 'UTC');
+
+disp('Data imported');
+
+else 
+    
+disp('Data already imported');
+    
+end
+        
+%% Functions
+
+% Calculates all dependecies along with a list of their most significant 
+% values, uses seperate intervals to compute dependencies. Also creates a
+% list of intervals to be used in the plots
+if merits_time == 1 || (visualise_matrix == 1 && visualise_time == 1)...
+   ||(summarise_data == 1 && summarise_time == 1)
+    
+disp('Calculating all dependencies for varying time...');    
+    
+[R_St,R_Sresamplet,R_Sfiltert,R_Bt,R_Ft,R_Ct,R_Cresamplet,R_Cfiltert,...
+largest_R_St,largest_R_Sresamplet,largest_R_Sfiltert,largest_R_Bt,...
+largest_R_Ft,largest_R_Ct,largest_R_Cresamplet,largest_R_Cfiltert] ...
+= calculate_all_dependencies_vary_time...
+(selected_features,num_intervals,num_max,Set_Date_1,Set_Date_2,...
+XOMMarketDepthOct2016_Values,DateTime_Con,...
+fs,type,freq_fraction,filter_order);
+
+disp('All dependencies for varying time calculated');
+
+end
+
+% Calculates all dependecies along with a list of their most significant 
+% values, uses seperate intervals to compute dependencies
+if merits_scale == 1 || (visualise_matrix == 1 && visualise_scale == 1)...
+   || (summarise_data == 1 && summarise_scale == 1)
+    
+disp('Calculating all dependencies for a varying time window...');     
+    
+[R_SWt,R_SresampleWt,R_SfilterWt,R_BWt,R_FWt,R_CWt,R_CresampleWt,...
+R_CfilterWt,largest_R_SWt,largest_R_SresampleWt,largest_R_SfilterWt,...
+largest_R_BWt,largest_R_FWt,largest_R_CWt,largest_R_CresampleWt,...
+largest_R_CfilterWt] = ...
+calculate_all_dependencies_vary_window...
+(selected_features,num_intervals,...
+num_max,Set_Date_1,Set_Date_2,XOMMarketDepthOct2016_Values,DateTime_Con,...
+fs,type,freq_fraction,filter_order);
+
+disp('All dependencies for a varying time window calculated');
+
+end
+
+% Calculates all dependecies along with a list of their most significant 
+% values, uses different resample rates to compute dependencies
+if merits_resampling == 1 ||...
+   (visualise_matrix == 1 && visualise_resampling == 1) ||...
+   (summarise_data == 1 && summarise_resampling == 1)
+    
+disp('Calculating all dependencies for a varying sampling frequency...');        
+    
+[R_SresampleSt,R_SfilterSt,R_CresampleSt,R_CfilterSt,largest_R_SresampleSt,...
+largest_R_SfilterSt,largest_R_CresampleSt,largest_R_CfilterSt] = ...
+calculate_all_dependencies_vary_resampling...
+(selected_features,num_max,Set_Date_1,Set_Date_2,...
+XOMMarketDepthOct2016_Values,DateTime_Con,type,...
+freq_fraction,filter_order,fs_range,num_freq);
+
+disp('All dependencies for a varying sampling frequency calculated');
+
+end
+
+% Contains a list of names of each feature
+[feature_name_list] = feature_name_list();
+
+% Relates the row number to the feature number and name
+clear relate_feature_list;  % Without this there will be an error
+[relate_feature_list] = relate_feature_list...
+(selected_features,feature_name_list);
+
+% Lists the date and time of the intervals
+[interval_list] = find_intervals...
+(Set_Date_1,Set_Date_2,DateTime_Con,num_intervals);
+
+disp('Creating required plots and compiling results...');
+
+% A scatter plot showing the price of the selected levels against time, 
+% with the size of each line representing the size of each level. All 
+% features are super-imposed on the same plot. Dotted line represents the   
+% interval spacing
+if scatter_plot == 1
+    
+plot_levels_scatter...
+(Set_Date_1,Set_Date_2,XOMMarketDepthOct2016_Values,DateTime_Con,...
+circle_size,selected_features,feature_name_list,interval_list);
+
+end
+
+% A scatter plot showing the price of the selected levels against time, 
+% with the size of each line representing the size of each level. All
+% features are ploted on seperate subplots. Dotted line represents the 
+% interval spacing
+if scatter_plot_sub == 1
+    
+plot_levels_scatter_sub...
+(Set_Date_1,Set_Date_2,XOMMarketDepthOct2016_Values,DateTime_Con,...
+circle_size,selected_features,feature_name_list,interval_list);
+
+end
+
+% A scatter plot showing the price of the selected levels against time, 
+% with the size of each line representing the size of each level. Each 
+% subplot compares the effect sampling and filtering to raw data
+if compare_sampling == 1
+    
+plot_compare_sampling...
+(Set_Date_1,Set_Date_2,XOMMarketDepthOct2016_Values,DateTime_Con,...
+circle_size,selected_features,feature_name_list,interval_list,fs,...
+type,filter_order,freq_fraction);
+
+end
+
+% A plot of the log determinant of each of the dependency matricies 
+% (merits) as a function of time
+if merits_time == 1 || (summarise_time == 1 && summarise_data == 1)
+    
+[merit_R_St,merit_R_Sresamplet,merit_R_Sfiltert,merit_R_Bt,merit_R_Ft,...
+merit_R_Ct,merit_R_Cresamplet,merit_R_Cfiltert]...
+= plot_merits_time...
+(num_intervals,R_St,R_Sresamplet,R_Sfiltert,R_Bt,R_Ft,R_Ct,R_Cresamplet,...
+R_Cfiltert,interval_list,merits_time);
+
+end
+
+% A plot of the log determinant of each of the dependency matricies 
+% (merits) where the x-axis represents time as an expanding window.
+% Effectively a cumulative merit
+if merits_scale == 1 || (summarise_scale == 1 && summarise_data == 1)
+    
+[merit_R_SWt,merit_R_SresampleWt,merit_R_SfilterWt,merit_R_BWt,...
+merit_R_FWt,merit_R_CWt,merit_R_CresampleWt,merit_R_CfilterWt]...
+= plot_merits_scale...
+(num_intervals,R_SWt,R_SresampleWt,R_SfilterWt,R_BWt,...
+R_FWt,R_CWt,R_CresampleWt,R_CfilterWt,interval_list,merits_time);
+
+end
+
+% A plot of the log determinant of each of the dependency matricies 
+% (merits) as a function of sampling frequency (only for resample and 
+% resample and filter corrleations)
+if merits_resampling == 1 ||...
+   (summarise_resampling == 1 && summarise_data == 1)
+
+[merit_R_SresampleSt,merit_R_SfilterSt,merit_R_CresampleSt,...
+merit_R_CfilterSt] ...
+= plot_merits_resampling...
+(fs_range,num_freq,R_SresampleSt,R_SfilterSt,R_CresampleSt,R_CfilterSt,...
+merits_resampling);
+
+end
+
+% A summary of all the results with each dependency method in a seperate
+% figure.  Each function is for varying: time, time window or resample
+if summarise_time == 1 && summarise_data == 1
+
+[str2] = summarise_results_time...
+(largest_R_Bt,largest_R_Ct,largest_R_Sfiltert,largest_R_Ft,...
+largest_R_Sresamplet,largest_R_St,largest_R_Cresamplet,largest_R_Cfiltert,...
+merit_R_Bt,merit_R_Ct,merit_R_Sfiltert,merit_R_Ft,merit_R_Sresamplet,...
+merit_R_St,merit_R_Cresamplet,merit_R_Cfiltert,...
+R_Bt,R_Ct,R_Sfiltert,R_Ft,R_Sresamplet,R_St,R_Cresamplet,R_Cfiltert,...
+summarise_data,summarise_standard,summarise_standard_resample,...
+summarise_standard_filter,summarise_brownian,summarise_fourier,...
+summarise_copula,summarise_copula_resample,summarise_copula_filter,...
+relate_feature_list,interval_list);
+
+end
+
+if summarise_scale == 1 && summarise_data == 1
+    
+[str2] = summarise_results_scale...
+(largest_R_BWt,largest_R_CWt,largest_R_SfilterWt,largest_R_FWt,...
+largest_R_SresampleWt,largest_R_SWt,largest_R_CresampleWt,...
+largest_R_CfilterWt,...
+merit_R_BWt,merit_R_CWt,merit_R_SfilterWt,merit_R_FWt,...
+merit_R_SresampleWt,merit_R_SWt,merit_R_CresampleWt,merit_R_CfilterWt,...
+R_BWt,R_CWt,R_SfilterWt,R_FWt,R_SresampleWt,R_SWt,R_CresampleWt,...
+R_CfilterWt,...
+summarise_data,summarise_standard,summarise_standard_resample,...
+summarise_standard_filter,summarise_brownian,summarise_fourier,...
+summarise_copula,summarise_copula_resample,summarise_copula_filter,...
+relate_feature_list,interval_list);
+
+end
+
+if summarise_resampling == 1 && summarise_data == 1
+    
+[str2] = summarise_results_resampling...
+(largest_R_SfilterSt,largest_R_SresampleSt,largest_R_CresampleSt,...
+largest_R_CfilterSt,...
+merit_R_SfilterSt,merit_R_SresampleSt,merit_R_CresampleSt,merit_R_CfilterSt,...
+R_SfilterSt,R_SresampleSt,R_CresampleSt,R_CfilterSt,...
+summarise_data,summarise_standard_resample,summarise_standard_filter,...
+summarise_copula_resample,summarise_copula_filter,...
+relate_feature_list,fs_range,num_freq);
+
+end
+
+% A figure with a visualisation of each of the dependency matricies. The
+% time updates every 3 seconds, so to close the figure, call "ctrl-C" in
+% the command window. Each function is for varying: time, time window or 
+% resample
+if visualise_matrix == 1 && visualise_time == 1
+    
+[str] = visualise_matrices_time...
+(R_St,R_Sresamplet,R_Sfiltert,R_Bt,R_Ft,R_Ct,R_Cresamplet,R_Cfiltert,...
+num_intervals,selected_features,feature_name_list,relate_feature_list);
+
+end
+
+if visualise_matrix == 1 && visualise_scale == 1
+    
+[str] = visualise_matrices_scale...
+(R_SWt,R_SresampleWt,R_SfilterWt,R_BWt,R_FWt,R_CWt,R_CresampleWt,...
+R_CfilterWt,num_intervals,selected_features,feature_name_list,...
+relate_feature_list);
+
+end
+
+if visualise_matrix == 1 && visualise_resampling == 1
+    
+[str] = visualise_matrices_resampling...
+(R_SresampleSt,R_SfilterSt,R_CresampleSt,R_CfilterSt,selected_features,...
+feature_name_list,relate_feature_list);
+
+end
+
+disp('End of script');
+
+% Matthew Newton
+% August - October 2017
+
+##### SOURCE END #####
+--></body></html>
